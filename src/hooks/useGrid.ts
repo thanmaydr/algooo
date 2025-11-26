@@ -1,9 +1,13 @@
-import { useState, useCallback } from 'react';
-import { CellType, ToolType } from '../utils/constants';
+import { useState, useCallback, useEffect } from 'react';
+import { CellType, ToolType, GRID_ROWS, GRID_COLS } from '../utils/constants';
 import { createInitialGrid, type GridCellData } from '../utils/gridHelpers';
 
-export const useGrid = () => {
-    const [grid, setGrid] = useState<GridCellData[][]>(createInitialGrid());
+export const useGrid = (rows: number = GRID_ROWS, cols: number = GRID_COLS) => {
+    const [grid, setGrid] = useState<GridCellData[][]>(createInitialGrid(rows, cols));
+
+    useEffect(() => {
+        setGrid(createInitialGrid(rows, cols));
+    }, [rows, cols]);
 
     const toggleCell = useCallback((row: number, col: number, activeTool: ToolType | null) => {
         setGrid((prevGrid) => {
@@ -37,13 +41,15 @@ export const useGrid = () => {
     }, []);
 
     const resetGrid = useCallback(() => {
-        setGrid(createInitialGrid());
-    }, []);
+        setGrid(createInitialGrid(rows, cols));
+    }, [rows, cols]);
 
     const setCell = useCallback((row: number, col: number, type: CellType) => {
         setGrid((prevGrid) => {
             const newGrid = prevGrid.map((r) => [...r]);
-            newGrid[row][col] = { ...newGrid[row][col], type };
+            if (newGrid[row] && newGrid[row][col]) {
+                newGrid[row][col] = { ...newGrid[row][col], type };
+            }
             return newGrid;
         });
     }, []);

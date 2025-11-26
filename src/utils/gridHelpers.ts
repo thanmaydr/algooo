@@ -6,11 +6,11 @@ export interface GridCellData {
     type: CellType;
 }
 
-export const createInitialGrid = (): GridCellData[][] => {
+export const createInitialGrid = (rows: number = GRID_ROWS, cols: number = GRID_COLS): GridCellData[][] => {
     const grid: GridCellData[][] = [];
-    for (let row = 0; row < GRID_ROWS; row++) {
+    for (let row = 0; row < rows; row++) {
         const currentRow: GridCellData[] = [];
-        for (let col = 0; col < GRID_COLS; col++) {
+        for (let col = 0; col < cols; col++) {
             currentRow.push({
                 row,
                 col,
